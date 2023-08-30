@@ -3,13 +3,12 @@ package database
 import (
 	"quotation-server/models"
 
-	"gorm.io/driver/mysql"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 )
 
 func OpenConnection() (*gorm.DB, error) {
-	dsn := "root:root@tcp(localhost:3306)/quotations?charset=utf8mb4&parseTime=True&loc=Local"
-    db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+    db, err := gorm.Open(sqlite.Open("quotation.db"), &gorm.Config{})
 
     if err != nil {
         return nil, err
