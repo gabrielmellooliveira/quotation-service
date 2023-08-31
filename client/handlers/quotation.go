@@ -38,15 +38,21 @@ func GetQuotation() ([]byte, error) {
     ctx, cancel := context.WithTimeout(ctx, time.Millisecond * 200)
     defer cancel()
 
-    req, err := http.Get(QUOTATION_SERVER_URL + "/cotacao")
+    req, err := http.NewRequestWithContext(ctx, "GET", QUOTATION_SERVER_URL + "/cotacao", nil)
 
 	if err != nil {
         return nil, err
 	}
 
-	defer req.Body.Close()
+    res, err := http.DefaultClient.Do(req)
 
-	return io.ReadAll(req.Body)
+    if err != nil {
+        return nil, err
+	}
+
+	defer res.Body.Close()
+
+	return io.ReadAll(res.Body)
 }
 
 func SaveQuotationInFile(content string) {
